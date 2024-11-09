@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:PutRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:DeleteRole",
+                "iam:PassRole",
+                "eks:DescribeCluster",
+                "tag:TagResources",
+                "iam:TagRole",
+                "eks:CreateAccessEntry",
+                "eks:CreateAddon",
+                "eks:CreateCluster",
+                "eks:CreateEksAnywhereSubscription",
+                "eks:CreateFargateProfile",
+                "eks:CreateNodegroup",
+                "eks:CreatePodIdentityAssociation"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
