@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' # HTTPS 리스너 포트 지정
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:<id-12>:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  # ACM 인증서 ARN
+
+   
+    alb.ingress.kubernetes.io/subnets: [subnet] # 없어도 되던데?
+
+  
+spec:
+  rules:
+  - host: <Route53 Hostiong Domain>
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-flask
+            port:
+              number: 80
