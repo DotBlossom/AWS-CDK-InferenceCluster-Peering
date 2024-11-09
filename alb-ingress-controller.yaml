@@ -1,0 +1,13 @@
+spec:
+...
+  template:
+    ...
+
+    #here
+    spec: 
+      containers:
+      - args:
+        - --ingress-class=alb
+        - --cluster-name=<EKS-CLUSTER-NAME>
+        - --aws-vpc-id=<VPCId-by-Stack-Output>
+        - --aws-region=<Stact-Region-Output>
