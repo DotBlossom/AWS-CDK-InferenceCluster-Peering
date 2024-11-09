@@ -1,0 +1,68 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: EKS-CLUSTER
+  region: ap-northeast-2
+vpc:
+  id: <cloudFormation Stack Template>
+  cidr: <cloudFormation Stack Template>
+  subnets:
+    private:
+      ap-northeast-2a:
+        id: <cloudFormation Stack Template>
+        cidr: <cloudFormation Stack Template>
+      ap-northeast-2b:
+        id: <cloudFormation Stack Template>
+        cidr: <cloudFormation Stack Template>
+  nat:
+    gateway: Disable # 이미 stack에서 VPC 세팅할때 이미 적용됨
+  clusterEndpoints:
+    publicAccess: false
+    privateAccess: true
+iam:
+  serviceRoleARN: "arn:aws:iam::<id-12>:role/EKS-ControlPlane-Role"
+managedNodeGroups:
+  - name: EKS-NODE
+    instanceType: m5.large
+    instanceName: EKS-CLUSTER-WORKER-Default
+    minSize: 1  
+    desiredCapacity: 1 
+    maxSize: 2
+    availabilityZones: ["ap-northeast-2a", "ap-northeast-2b"]
+    volumeSize: 30
+    privateNetworking: true
+    ssh:
+      allow: false  #later..
+    labels: {role: worker}
+    iam:
+      instanceRoleARN: "arn:aws:iam::<id-12>:role/EKS-WORKERNODE-ROLE"
+  
+  - name: EKS-NODE-T3  # t3.medium 노드 그룹 추가
+    instanceType: t3.medium
+    instanceName: EKS-CLUSTER-WORKER-T3
+    minSize: 1  # t3.medium 노드 개수를 1로 설정
+    desiredCapacity: 1  # t3.medium 노드 개수를 1로 설정
+    maxSize: 2
+    availabilityZones: ["ap-northeast-2a", "ap-northeast-2b"]
+    volumeSize: 30
+    privateNetworking: true
+    ssh:
+      allow: false
+    labels: {role: worker-t3}  # 레이블을 다르게 설정
+    iam:
+      instanceRoleARN: "arn:aws:iam::<id-12>:role/EKS-WORKERNODE-ROLE"
+  
+  - name: EKS-NODE-GPU  # GPU 노드 그룹 추가, 0.75$ ondemends
+    instanceType: g4dn.xlarge
+    instanceName: EKS-CLUSTER-WORKER-GPU
+    minSize: 1
+    desiredCapacity: 1
+    maxSize: 2
+    availabilityZones: ["ap-northeast-2a", "ap-northeast-2b"]
+    volumeSize: 30
+    privateNetworking: true
+    ssh:
+      allow: false
+    labels: {role: worker-gpu}
+    iam:
+      instanceRoleARN: "arn:aws:iam::<id-12>:role/EKS-WORKERNODE-ROLE"
