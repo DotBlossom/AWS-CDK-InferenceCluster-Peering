@@ -1,9 +1,8 @@
 # AWS_CloudFormation_EKS_GPU-Lambda_set
 
 ### CloudFormation Temlpate + CDK 
-CF로 VPC및 subnet을 yml로 간단히 재사용할 수 있게 구성.
-동시에, CDK로 GPU inference / flask + Cuda Setting + Lambda(bedrock caller) Role까지 구축
-
+    -CF로 VPC및 subnet을 yml로 간단히 재사용할 수 있게 구성.
+    -동시에, CDK로 GPU inference / flask + Cuda Setting + Lambda(bedrock caller) Role까지 구축
 
 ### Add
     -mongodb atlas - pairing
@@ -21,3 +20,7 @@ CF로 VPC및 subnet을 yml로 간단히 재사용할 수 있게 구성.
     -보안 그룹 설정: ALB와 API Gateway의 보안 그룹을 설정
     
     api_gateway_url = "https://{api-id}.execute-api.{region}.amazonaws.com/{stage-name}/bedrock/Query/Selector"  
+
+
+### Strimzi in EKS
+    -Spring Kafka Image(yml로 Deploy 작성)와, Strimzi Helm 설치 + Kafka.yml로 Provision 가능한 Kafka Cluster 자동 인식 및 구축.
