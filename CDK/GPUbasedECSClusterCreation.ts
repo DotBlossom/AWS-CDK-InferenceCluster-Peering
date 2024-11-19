@@ -37,6 +37,7 @@ class ECSCluster extends cdk.Stack {
     cluster.addAsgCapacityProvider(capacityProvider);
 
     // Sample CUDA RUN -test용
+    /*
     const gpuTaskDefinition = new ecs.Ec2TaskDefinition(this, "gpu-task");
     gpuTaskDefinition.addContainer("gpu", {
       essential: true,
@@ -50,10 +51,20 @@ class ECSCluster extends cdk.Stack {
         logRetention: 1,
       }),
     });
+    */
     
+    // ECS Task Role 정의 for invokeLambda
+    const ecsTaskRole = new iam.Role(this, 'EcsTaskRole', {
+      assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
+    });
+    
+    // ECS Task Definition에 Task Role 연결
+    const gpuTaskDefinitionInReal = new ecs.Ec2TaskDefinition(this, "gpu-task-real", { // task definition 이름 변경
+      taskRole: ecsTaskRole,
+    });
+
     // realRunner
-    const gpuTaskDefinitionInReal = new ecs.Ec2TaskDefinition(this, "gpu-task");
-    gpuTaskDefinition.addContainer("gpu", {
+    gpuTaskDefinitionInReal.addContainer("gpu", {
       essential: true,
       image: ecs.ContainerImage.fromRegistry("claudeluxpair/flask-inference-cluster:latest"), // 이미지 이름 변경
       memoryLimitMiB: 80,
@@ -65,25 +76,7 @@ class ECSCluster extends cdk.Stack {
         logRetention: 1,
       }),
     });
-    
-    // ECS Task Role 정의 for invokeLambda
-    const ecsTaskRole = new iam.Role(this, 'EcsTaskRole', {
-      assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
-    });
-    
-    // 람다 함수 호출 권한 추가
-    ecsTaskRole.addToPolicy(new iam.PolicyStatement({
-      actions: ['lambda:InvokeFunction'],
-      resources: [lambdaFunction.functionArn], // 람다 함수 ARN으로 제한
-    }));
-    
-    // ECS Task Definition에 Task Role 연결
-    const gpuTaskDefinitionInReal = new ecs.Ec2TaskDefinition(this, "gpu-task", {
-      taskRole: ecsTaskRole,
-    });
 
-    
-    
     // Request ECS to launch the task onto the fleet
     new ecs.Ec2Service(this, "gpu-service", {
       cluster,
@@ -97,12 +90,8 @@ class ECSCluster extends cdk.Stack {
           weight: 1,
         },
       ],
-      taskDefinition: gpuTaskDefinition,
+      taskDefinition: gpuTaskDefinitionInReal, // real task definition 사용
     });
-
-
-    // 보안 그룹은 콘솔로 일단 하자..
-
 
 
     // Lambda 함수에 대한 IAM 역할 생성
@@ -120,9 +109,9 @@ class ECSCluster extends cdk.Stack {
         actions: ['bedrock:*'], // Bedrock API에 대한 모든 권한 허용
         resources: ['*'], // 모든 리소스에 대한 권한 허용
       }));
-  
-      // Lambda 함수 생성
-      const lambdaFunction = new lambda.Function(this, 'MyLambdaFunction', {
+
+    // Lambda 함수 생성
+    const lambdaFunction = new lambda.Function(this, 'MyLambdaFunction', {
         runtime: lambda.Runtime.PYTHON_3_9,
         handler: 'index.handler',
         code: lambda.Code.fromAsset('lambda-code'),
@@ -130,44 +119,41 @@ class ECSCluster extends cdk.Stack {
         role: lambdaRole, // IAM 역할 연결
         // allowPublicSubnet: true, // public subnet에 배포 (VPC 엔드포인트를 사용하는 경우 필요하지 않음)
       });
-      
-      
-      
-      // *********보안 그룹은 콘솔로 일단 하자..*********
-      const ec2SecurityGroup = asg.connections.securityGroups[0];
-      
-      ec2SecurityGroup.addIngressRule(lambdaSecurityGroup, ec2.Port.tcp(443), 'Allow HTTPS traffic from Lambda function'); 
-      
-      // ********* EOL *********
 
-      // VPC 엔드포인트 생성 (Bedrock API의 경우 필요)
-      const bedrockEndpoint = vpc.addInterfaceEndpoint('BedrockEndpoint', {
+    // 람다 함수 호출 권한 추가
+    ecsTaskRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['lambda:InvokeFunction'],
+      resources: [lambdaFunction.functionArn], // 람다 함수 ARN으로 제한
+    }));
+    
+      
+      
+    // *********보안 그룹*********
+    const ec2SecurityGroup = asg.connections.securityGroups[0];
+    const lambdaSecurityGroup = lambdaFunction.connections.securityGroups[0]; // lambda security group 가져오기
+      
+    ec2SecurityGroup.addIngressRule(lambdaSecurityGroup, ec2.Port.tcp(443), 'Allow HTTPS traffic from Lambda function'); 
+      
+    // ********* EOL *********
+
+    // VPC 엔드포인트 생성 (Bedrock API의 경우 필요)
+    const bedrockEndpoint = vpc.addInterfaceEndpoint('BedrockEndpoint', {
         service: ec2.InterfaceVpcEndpointAwsService.BEDROCK,
       });
     
-      // VPC Endpoint Policy 설정
-      bedrockEndpoint.addToPolicy(new iam.PolicyStatement({
-        principals: [new iam.AnyPrincipal()],
-        actions: ['bedrock:*'],
-        resources: ['*'],
-        conditions: {
-          ArnEquals: {
-            'aws:SourceVpcEndpoint': bedrockEndpoint.vpcEndpointId,
-          },
+    // VPC Endpoint Policy 설정
+    bedrockEndpoint.addToPolicy(new iam.PolicyStatement({
+      principals: [new iam.AnyPrincipal()],
+      actions: ['bedrock:*'],
+      resources: ['*'],
+      conditions: {
+        ArnEquals: {
+          'aws:SourceVpcEndpoint': bedrockEndpoint.vpcEndpointId,
         },
+      },
 
-        
+    }));
       // Lambda 함수에 VPC 엔드포인트 연결
       lambdaFunction.connections.allowToInterfaceEndpoint(bedrockEndpoint, ec2.Port.tcp(443));
-    }
   }
-
-
-
-
-
-const app = new cdk.App();
-
-new ECSCluster(app, "GpuTask");
-
-app.synth();
+}
