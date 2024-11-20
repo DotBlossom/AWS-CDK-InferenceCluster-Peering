@@ -14,7 +14,7 @@ metadata:
    
     alb.ingress.kubernetes.io/subnets: [subnet] # 없어도 되던데?
     
-    alb.ingress.kubernetes.io/auth-type: jwt
+    alb.ingress.kubernetes.io/auth-type: 
     alb.ingress.kubernetes.io/auth-config: |
       {
         "issuer": "<OIDC Provider URL>", 
