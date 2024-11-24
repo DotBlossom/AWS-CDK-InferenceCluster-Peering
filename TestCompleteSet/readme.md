@@ -57,3 +57,9 @@
 ## VPC-Peering-based , ECS Cluster (ALB Routing)
 
 ![aafff](https://github.com/user-attachments/assets/02f8a29e-42d7-433b-9376-8984477a3a8e)
+
+
+## infraposer
+
+![dja](https://github.com/user-attachments/assets/dec6687d-04a7-4ade-b91b-17b47a499544)
+
