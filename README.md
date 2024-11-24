@@ -6,7 +6,9 @@
 
 ### Add
     -mongodb atlas - pairing
-    -Lambda, API endPoint, Bedlock - later
+    -Lambda, API endPoint, Bedlock - later (이거하려고 함)
+    -ASG 권한주기
+    -Peering 병합
 
 ### Next
     - 동일 VPC에서의 세팅이 옳은가?
