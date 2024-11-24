@@ -11,7 +11,7 @@
     -Peering 병합
 
 ### Next
-    - 동일 VPC에서의 세팅이 옳은가?
+    - EKS VPC -- ECS VPC Peering 전략 
 
 ### ALB OIDC Provider
     - 기존 ALB 과정에서 생성한 OIDC에서 ,Cognito를 적용하거나 (더 직관적 UI)
