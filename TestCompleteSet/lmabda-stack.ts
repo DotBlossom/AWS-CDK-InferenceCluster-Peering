@@ -39,6 +39,11 @@ export class LambdaStack extends cdk.Stack {
     // API Gateway 생성
     const api = new apigw.RestApi(this, 'lambdaApi', {
       restApiName: 'Lambda API',
+      defaultCorsPreflightOptions: { 
+        allowOrigins: apigw.Cors.ALL_ORIGINS,
+        allowMethods: apigw.Cors.ALL_METHODS,
+        allowHeaders: apigw.Cors.DEFAULT_HEADERS,
+      } // CORS 설정 추가
     });
    
     
