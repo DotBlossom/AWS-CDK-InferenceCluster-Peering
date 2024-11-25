@@ -18,7 +18,8 @@
 
 ![12 drawio](https://github.com/user-attachments/assets/43e2232c-ec17-4980-b663-9a007ae7ecfd)
 
-
+    - target Group이 ASG (2-AZ)임. 그래서 ALB는 AZ 부하분산, ASG check를 함.
+    - target Group을 2 - Diff-pvs-ASG로 나누었고, 리스너 경로 기반 라우팅을 함.
 
 ### eks 메모장 (이제안씀)
 
