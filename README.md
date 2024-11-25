@@ -1,8 +1,13 @@
 # AWS-VPC-Pipeline Using Lambda + Bedrock + ECS(individual ASG , CDK ts)
 
+    - this is implicit data pipelines, 
+    https://github.com/DotBlossom/KafkaBasedDataPipeline_MSA_AI
+
 ### CloudFormation Temlpate + CDK 
     -CF로 VPC및 subnet을 yml로 간단히 재사용할 수 있게 구성.
     -동시에, CDK로 GPU inference / flask + Cuda Setting + Lambda(bedrock caller) Role까지 구축
+
+
 
 ### Add
     -mongodb atlas - pairing
