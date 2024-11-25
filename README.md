@@ -18,6 +18,7 @@
     - VPC2--AtlasVPC 피어링으로 인해, 람다를 VPC2에 종속 시킴
     - EKS에서 Region단위로 호출 할 수있게 APIGateway-Lambda 종속 (BOTO3)
     - Lambda는 DB와 Peering 되어있기 떄문에, Boto로 그냥 Python 코드로 바로 Json, Vector 저장 Schema 적용
+    - ATLAS는 vpc PRIVATELINK를 지원해줌. 그러니 VPC2 출발할 때 NAT에 연결할 필요가 없다.
 
 ### Next
     - EKS VPC -- ECS VPC Peering 전략 
