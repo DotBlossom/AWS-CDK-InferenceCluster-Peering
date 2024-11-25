@@ -1,4 +1,4 @@
-# AWS_CloudFormation_EKS_GPU-Lambda_set
+# AWS-VPC-Pipeline Using Lambda + Bedrock + ECS(individual ASG , CDK ts)
 
 ### CloudFormation Temlpate + CDK 
     -CF로 VPC및 subnet을 yml로 간단히 재사용할 수 있게 구성.
