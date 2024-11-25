@@ -16,10 +16,13 @@
 
 ### 임시 (no privateLink : spec - vpcEndpoint)
 
-![12 drawio](https://github.com/user-attachments/assets/43e2232c-ec17-4980-b663-9a007ae7ecfd)
+![12 drawio (1)](https://github.com/user-attachments/assets/d093e962-2ede-4760-9a72-837fd57bdfc4)
+
+
 
     - target Group이 ASG (2-AZ)임. 그래서 ALB는 AZ 부하분산, ASG check를 함.
     - target Group을 2 - Diff-pvs-ASG로 나누었고, 리스너 경로 기반 라우팅을 함.
+    - VPC peering을 하지만, EKS나 ECS 설계나 둘다 요청은 alb를 통해 받는 구조
 
 ### eks 메모장 (이제안씀)
 
