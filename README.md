@@ -17,8 +17,9 @@
 
 ## 분리안하고 혼자 이해하기 위한 쓰레기 atlas Peering , Regional API Gateway to Lambda
 
+![제목 없는 다ㄴ이어그램 drawio](https://github.com/user-attachments/assets/3fb257b3-a7dd-46d5-8a4e-fe8ca13c88f0)
 
-![sssc drawio](https://github.com/user-attachments/assets/09031b17-c41f-4869-850b-d5fa5152b2c2)
+
 
     - VPC2--AtlasVPC 피어링으로 인해, 람다를 VPC2에 종속 시킴
     - EKS에서 Region단위로 호출 할 수있게 APIGateway-Lambda 종속 (BOTO3)
