@@ -26,6 +26,7 @@
     - Lambda는 DB와 Peering 되어있기 떄문에, Boto로 그냥 Python 코드로 바로 Json, Vector 저장 Schema 적용
     - ATLAS는 vpc PRIVATELINK를 지원해줌. 그러니 VPC2 출발할 때 NAT에 연결할 필요가 없다.
     - Transit 필요 없는이유는 , api gateway로 Lambda 만 접근하면 되기때문이다. 람다가 매우 신의 한 수
+    - 당연히 peering 시, 각 igw를 통과하지만, 표현 시 복잡성으로 인해 생략함
 
 ### Next
     - EKS VPC -- ECS VPC Peering 전략 
