@@ -19,6 +19,7 @@
     - EKS에서 Region단위로 호출 할 수있게 APIGateway-Lambda 종속 (BOTO3)
     - Lambda는 DB와 Peering 되어있기 떄문에, Boto로 그냥 Python 코드로 바로 Json, Vector 저장 Schema 적용
     - ATLAS는 vpc PRIVATELINK를 지원해줌. 그러니 VPC2 출발할 때 NAT에 연결할 필요가 없다.
+    - Transit 필요 없는이유는 , api gateway로 Lambda 만 접근하면 되기때문이다. 람다가 매우 신의 한 수
 
 ### Next
     - EKS VPC -- ECS VPC Peering 전략 
@@ -33,6 +34,7 @@
     - target Group이 ASG (2-AZ)임. 그래서 ALB는 AZ 부하분산, ASG check를 함.
     - target Group을 2 - Diff-pvs-ASG로 나누었고, 리스너 경로 기반 라우팅을 함.
     - VPC peering을 하지만, EKS나 ECS 설계나 둘다 요청은 alb를 통해 받는 구조
+    
 
 ### eks 메모장 (이제안씀)
 
