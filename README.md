@@ -13,6 +13,17 @@
 ### Next
     - EKS VPC -- ECS VPC Peering 전략 
 
+
+### 임시 (no privateLink : spec - vpcEndpoint)
+
+![12 drawio](https://github.com/user-attachments/assets/43e2232c-ec17-4980-b663-9a007ae7ecfd)
+
+
+
+### eks 메모장 (이제안씀)
+
+
+
 ### ALB OIDC Provider
     - 기존 ALB 과정에서 생성한 OIDC에서 ,Cognito를 적용하거나 (더 직관적 UI)
         -- https://aws.amazon.com/ko/blogs/aws/built-in-authentication-in-alb/
