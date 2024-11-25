@@ -10,6 +10,12 @@
     -ASG 권한주기
     -Peering 병합
 
+## atlas Peering , Regional API Gateway to Lambda
+
+
+![sssc drawio](https://github.com/user-attachments/assets/09031b17-c41f-4869-850b-d5fa5152b2c2)
+
+
 ### Next
     - EKS VPC -- ECS VPC Peering 전략 
 
