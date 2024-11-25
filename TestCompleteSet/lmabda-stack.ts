@@ -66,14 +66,22 @@ export class LambdaStack extends cdk.Stack {
 
 
 
-
+import { LambdaStack } from './lambda-stack';
 
 export class CdkClusterStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+
     // Lambda 스택 생성
-    new LambdaStack(this, 'LambdaStack'); 
+    const lambdaStack = new LambdaStack(this, 'LambdaStack');
+    
+    
+    
+    // test
+    new cdk.CfnOutput(this, 'LambdaApiUrl', {
+      value: lambdaStack.api.url,
+    });
   }
 }
 
