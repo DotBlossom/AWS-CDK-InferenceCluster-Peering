@@ -23,7 +23,7 @@ export class LambdaRelStack extends cdk.Stack {
     const certificate = acm.Certificate.fromCertificateArn(this, 'Certificate', certificateArn);
     
     const hostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
-      hostedZoneId: 'Z01387753FNW1ZQQXCSNU', // Hosted Zone ID로 변경
+      hostedZoneId: '', // Hosted Zone ID로 변경
       zoneName: 'dotblossom.today',
     });
 
