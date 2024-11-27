@@ -1,7 +1,7 @@
-"certificateArn": 
-    "hostedZoneId":
-    "mongoUrl": ",
-
+### 완료사항
+    -mongoDB Atlas VPC 피어링까지 완료
+    -Lambda에 서브도메인 부여해서, apigatewayRouting 완성
+    -이제 머함
 
 ### 람다에 패키지 배포하려면 그냥 -t로 다운받아서 같이 올려주자 test완
     
@@ -25,3 +25,8 @@
       env: {account: '', region: 'ap-northeast-2'}, 
       vpc: parent_cdk.vpc, 
     });
+
+    
+    "certificateArn": 
+    "hostedZoneId":
+    "mongoUrl": ",
