@@ -67,15 +67,32 @@ export class LambdaRelStack extends cdk.Stack {
           allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
         },
     });
-    // 도메인 이름 설정
+
+
     // Lambda 함수와 API Gateway 통합
     const lambdaIntegration = new apigateway.LambdaIntegration(myLambdaFunction);
-    const lambdaResource = lambdaApi.root
-      .addResource('api')
-      .addResource('lambda')
-      .addResource('bedrock');
+    const apiResource = lambdaApi.root.addResource('api'); 
+    
 
+    const lambdaResource = apiResource.addResource('bedrock'); 
     lambdaResource.addMethod('GET', lambdaIntegration); // GET 메서드 추가
+
+
+    const mongoLambdaFunction = new lambda.Function(this, 'mongoLambdaFunction ', {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('mongo'),
+      role: lambdaRole, 
+      vpc: vpc,
+      environment: {
+          MONGODB_URI: mongoUrl,
+      }});
+  
+
+    const mongoLambdaIntegration = new apigateway.LambdaIntegration(mongoLambdaFunction);
+    const mongoLambdaResource = apiResource.addResource('mongo');
+    mongoLambdaResource.addMethod('GET', mongoLambdaIntegration); // GET 메서드 추가
+  
 
     // 도메인 이름 설정
     const domainName = new apigateway.DomainName(this, 'DomainName', {
@@ -99,79 +116,20 @@ export class LambdaRelStack extends cdk.Stack {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(new targets.ApiGatewayDomain(domainName)),
     });
-
-
-   // Lambda 함수의 리소스 정책 추가
-    myLambdaFunction.addPermission('AllowAPIGatewayInvoke', {
-    principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
-    sourceArn: lambdaApi.arnForExecuteApi('GET','/api/lambda/bedrock', 'prod') // API Gateway 실행 ARN
-    });
-
-    // *********************** mongoLambda ***************************
-
-    const mongoLambdaFunction = new lambda.Function(this, 'mongoLambdaFunction ', {
-    runtime: lambda.Runtime.PYTHON_3_9,
-    handler: 'index.mongo_handler',
-    code: lambda.Code.fromAsset('lambda'),
-    role: lambdaRole, 
-    vpc: vpc,
-    environment: {
-        MONGODB_URI: mongoUrl,
-    }});
-
-    const mongoLambdaApi =new apigateway.LambdaRestApi(this, 'mongoLambdaApi', {
-        handler: mongoLambdaFunction,
-        proxy: false,
-        defaultCorsPreflightOptions : {
-          allowOrigins: apigateway.Cors.ALL_ORIGINS,
-          allowMethods: apigateway.Cors.ALL_METHODS,
-          allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
-        },
-    });
-
-
-
-    // 도메인 이름 설정
-    // Lambda 함수와 API Gateway 통합
-    const mongoLambdaIntegration = new apigateway.LambdaIntegration(mongoLambdaFunction);
-    const mongoLambdaResource = mongoLambdaApi.root
-      .addResource('api')
-      .addResource('lambda')
-      .addResource('mongo')
-      .addResource('health');
-
-    mongoLambdaResource.addMethod('GET', mongoLambdaIntegration); // GET 메서드 추가
-
-    // 도메인 이름 설정
-    const mongoDomainName = new apigateway.DomainName(this, ' mongoDomainName', {
-        domainName: 'mongo.dotblossom.today',
-        certificate: certificate,
-        securityPolicy: apigateway.SecurityPolicy.TLS_1_2,
-        endpointType: apigateway.EndpointType.REGIONAL,
-      });
-  
-  
-      // API 매핑 생성
-    new apigateway.BasePathMapping(this, 'BasePathMappingMongo', {
-        domainName: mongoDomainName,
-        restApi: mongoLambdaApi, 
-      });
-  
-  
-      // Route 53 A 레코드 생성
-    new route53.ARecord(this, 'mongoRecord', {
-        recordName: 'mongo',
-        zone: hostedZone,
-        target: route53.RecordTarget.fromAlias(new targets.ApiGatewayDomain(mongoDomainName)),
-      });
     
     // Lambda 함수의 리소스 정책 추가
-    mongoLambdaFunction.addPermission('AllowAPIGatewayInvoke', {
-        principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
-        sourceArn: mongoLambdaApi.arnForExecuteApi('GET','/api/lambda/mongo/health', 'prod') // API Gateway 실행 ARN
+    myLambdaFunction.addPermission('AllowAPIGatewayInvoke', {
+      principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+      sourceArn: lambdaApi.arnForExecuteApi('GET','/api/bedrock', 'prod') // API Gateway 실행 ARN
     });
-    
-    
+
+    // Lambda 함수의 리소스 정책 추가
+    mongoLambdaFunction.addPermission('AllowAPIGatewayInvoke', {
+      principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+      sourceArn: lambdaApi.arnForExecuteApi('GET','/api/mongo', 'prod') // API Gateway 실행 ARN
+    });
+  
+
 
     new cdk.CfnOutput(this, 'LambdaFunctionName' , {
       value: myLambdaFunction.functionName,
