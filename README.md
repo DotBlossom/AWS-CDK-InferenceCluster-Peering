@@ -9,6 +9,7 @@
 
 ### 진행사항
     - bedrock 연동 까지 완료^^ 
+    - mongodb atlas vpc peering도 완료^^
     
 
 
