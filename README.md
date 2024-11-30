@@ -10,6 +10,7 @@
 ### 진행사항
     - bedrock 연동 까지 완료^^ 
     - mongodb atlas vpc peering도 완료^^
+    - kafka 제외한 datacontorller를 myvpc에 주기. fastapi / flask로 빠르게 구현가능.
     
 
 
