@@ -8,7 +8,11 @@
 ![fafafafaf](https://github.com/user-attachments/assets/62c1acf8-2010-40e7-a6c6-b300d7d44cf2)
 
 
-
+### context
+    1. route53 arn
+    2. certifi.. arn
+    3. mongo url
+    
 
 
     #!/usr/bin/env node
